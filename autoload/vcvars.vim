@@ -5,9 +5,9 @@ endfunction
 function! vcvars#VcVars()
     let bufdir = fnamemodify(bufname('%'), ":p:h")
 
-    let gitroot = vcvars#Strip(system("git -C ".l:bufdir." rev-parse --show-toplevel"))
+    let gitroot = vcvars#Strip(system("cd ".l:bufdir."; git rev-parse --show-toplevel"))
     let isGit = v:shell_error == 0
-    let hgroot = vcvars#Strip(system("hg --cwd ".l:bufdir." root"))
+    let hgroot = vcvars#Strip(system("cd ".l:bufdir."; hg root"))
     let isHg = v:shell_error == 0
 
     " If one repo type is embeded in another, use the one with the longest path
@@ -20,7 +20,7 @@ function! vcvars#VcVars()
     endif
 
     if l:isHg
-        let hgbranch = vcvars#Strip(system("hg --cwd ".l:bufdir." branch"))
+        let hgbranch = vcvars#Strip(system("cd ".l:bufdir."; hg branch"))
         if v:shell_error != 0
             let hgbranch = ''
         endif
@@ -29,7 +29,7 @@ function! vcvars#VcVars()
     endif
 
     if l:isGit
-        let gitbranch = vcvars#Strip(system("git rev-parse --abbrev-ref HEAD"))
+        let gitbranch = vcvars#Strip(system("cd ".l:bufdir."; git rev-parse --abbrev-ref HEAD"))
         if v:shell_error != 0
             let gitbranch = ''
         endif
